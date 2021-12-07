@@ -44,10 +44,16 @@ defmodule SlashServerWeb.SlashController do
     end
   end
 
-  defp respond_to_slash(conn, %{"data" => %{"name" => name}}) do
-    case SlashServer.Api.get(SlashServer.Command, name: name) do
-      {:ok, %SlashServer.Command{name: name, description: desc, response: resp}} ->
-        resp = construct_response(name, desc, resp)
+  defp respond_to_slash(conn, %{"data" => %{"name" => name, "options" => options}}) do
+    sub_name = List.first(options) |> Map.get("name")
+
+    case SlashServer.Api.get(SlashServer.CommandGroup, name: name)
+         |> SlashServer.Api.load([:commands]) do
+      {:ok, %SlashServer.CommandGroup{commands: commands}} ->
+        %{description: sub_desc, response: sub_res} =
+          Enum.find(commands, fn c -> c.name == sub_name end)
+
+        resp = construct_response(sub_name, sub_desc, sub_res)
         json(conn, resp)
 
       _ ->

@@ -17,7 +17,7 @@ defmodule SlashServer.CommandGroup do
     end
 
     relationships do
-      has_many :commands, SlashServer.Command, destination_field: :command_id
+      has_many :commands, SlashServer.Command, destination_field: :command_group_id
     end
 
     # This is set on create

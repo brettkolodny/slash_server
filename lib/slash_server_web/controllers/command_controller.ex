@@ -10,7 +10,6 @@ defmodule SlashServerWeb.CommandController do
             render(conn, "show.html", names: [], command_group: command_group)
 
           _ ->
-            # IO.inspect(commands)
             names = Enum.map(commands, fn c -> Map.get(c, :name) end)
             render(conn, "show.html", names: names, command_group: command_group)
         end
@@ -31,7 +30,7 @@ defmodule SlashServerWeb.CommandController do
 
   def edit(conn, %{"name" => name, "command_group" => command_group}) do
     if name != nil do
-      case SlashServer.Api.get(SlashServer.CommandGroup, name: name) do
+      case SlashServer.Api.get(SlashServer.Command, name: name) do
         {:ok, res} ->
           %{name: name, description: desc, response: resp} = res
 
@@ -64,6 +63,8 @@ defmodule SlashServerWeb.CommandController do
               Ash.Changeset.for_update(res, :update, command_data)
               |> SlashServer.Api.update()
 
+              SlashServer.Api.load!(group, [:commands])
+
             _ ->
               {:ok, command} =
                 Ash.Changeset.for_create(SlashServer.Command, :create, command_data)
@@ -71,19 +72,10 @@ defmodule SlashServerWeb.CommandController do
 
               group
               |> SlashServer.Api.load!([:commands])
-              |> then(fn group ->
-                IO.inspect(group.commands, limit: :infinity)
-                group
-              end)
               |> Ash.Changeset.for_update(:update)
-              |> Ash.Changeset.append_to_relationship(:commands, command)
+              |> Ash.Changeset.replace_relationship(:commands, [command | group.commands])
               |> SlashServer.Api.update()
-              # <-- Don't you need a load after the update?
               |> SlashServer.Api.load!([:commands])
-              |> then(fn group ->
-                IO.inspect(group.commands, limit: :infinity)
-                group
-              end)
           end
 
         case res do
@@ -98,7 +90,12 @@ defmodule SlashServerWeb.CommandController do
             )
 
           _ ->
-            # SlashServer.Discord.create_command(name, desc)
+            IO.inspect(res)
+
+            commands =
+              Enum.map(res.commands, fn c -> %{name: c.name, description: c.description} end)
+
+            SlashServer.Discord.create_command(group.name, group.description, commands)
             redirect(conn, to: Routes.command_path(conn, :show, command_group))
         end
 
@@ -117,14 +114,19 @@ defmodule SlashServerWeb.CommandController do
   def delete(conn, %{"name" => name, "command_group" => command_group}) do
     case SlashServer.Api.get(SlashServer.Command, name: name) do
       {:ok, res} ->
-        case SlashServer.Discord.delete_command(name) do
+        case Ash.Changeset.for_destroy(res, :destroy)
+             |> SlashServer.Api.destroy()
+             |> IO.inspect() do
           :ok ->
-            Ash.Changeset.for_destroy(res, :destroy)
-            |> SlashServer.Api.destroy()
+            %{name: name, description: desc, commands: commands} =
+              SlashServer.CommandGroup
+              |> SlashServer.Api.get!(name: command_group)
+              |> SlashServer.Api.load!([:commands])
 
+            SlashServer.Discord.create_command(name, desc, commands)
             redirect(conn, to: Routes.command_path(conn, :show, command_group))
 
-          :error ->
+          _ ->
             conn
             |> put_flash(:error, "Could not delete command")
             |> redirect(to: Routes.command_path(conn, :show, command_group))
