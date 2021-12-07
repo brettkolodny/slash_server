@@ -1,0 +1,22 @@
+<section class="w-10/12 flex flex-col justify-center items-center py-6">
+
+  <%= form_for @conn, Routes.command_group_path(@conn, :create_or_update), [as: :command, class: "flex flex-col w-full gap-2"], fn f -> %>
+    <label class="flex flex-col">
+      <div>Name</div>
+        <%=
+          readonly? = if assigns[:edit] do
+            true
+          else
+            false
+          end
+
+          text_input f, :name, [class: "border border-black pl-2", readonly: readonly?, value: @name] 
+        %>
+    </label>
+    
+    <label class="flex flex-col">
+      Description <%= text_input f, :description, [class: "border border-black pl-2", value: @description] %>
+    </label>
+    <%= submit "Create", [class: "self-start border border-black cursor-pointer mt-2 px-2"] %>
+  <% end %>
+</section>
