@@ -73,8 +73,9 @@ config :slash_server, SlashServerWeb.Endpoint,
 
 config :slash_server,
   app_id: "887442889968336987",
-  app_secret: System.fetch_env!("APP_SECRET"),
-  guild_id: "816392847859122186"
+  app_secret: System.get_env("APP_SECRET", ""),
+  guild_id: "816392847859122186",
+  app_password: System.get_env("PASSWORD", "admin")
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"

@@ -10,12 +10,24 @@ defmodule SlashServerWeb.Router do
     plug :put_secure_browser_headers
   end
 
+  pipeline :session_auth do
+    plug SlashServerWeb.Plugs.Auth
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
 
+  scope "/", SlashServerWeb do
+    pipe_through :browser
+
+    get "/", AuthController, :show
+    post "/", AuthController, :login
+  end
+
   scope "/commands", SlashServerWeb do
     pipe_through :browser
+    pipe_through :session_auth
 
     #Command Group
     get "/", CommandGroupController, :show

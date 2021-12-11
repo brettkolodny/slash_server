@@ -1,0 +1,8 @@
+<section class="w-4/5 h-screen flex py-6 flex-col justify-center items-center gap-4">
+  <div class="border border-black p-12">
+    <%= form_for @conn, Routes.auth_path(@conn, :login), [as: :login], fn f ->  %>
+      <%= password_input f, :password, [class: "border border-black pl-2", placeholder: "password"] %>
+      <%= submit "Login", [class: "self-start border border-black cursor-pointer mt-2 px-2"] %>
+    <% end %>
+  </div>
+</section>
