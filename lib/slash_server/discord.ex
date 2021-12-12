@@ -38,8 +38,6 @@ defmodule SlashServer.Discord do
   def create_command(name, desc, commands \\ []) do
     command_options = Enum.map(commands, fn c -> %{ type: 1, name: c.name, description: c.description} end)
 
-    IO.inspect(command_options)
-
     headers = [
       Authorization: "Bot #{Application.get_env(:slash_server, :app_secret)}",
       "Content-Type": "application/json"
@@ -48,7 +46,8 @@ defmodule SlashServer.Discord do
     body = Jason.encode!(%{name: name, description: desc, options: command_options})
 
     case HTTPoison.post(@endpoint, body, headers) do
-      {:ok, %HTTPoison.Response{status_code: _code, body: _body}} ->
+      {:ok, %HTTPoison.Response{status_code: code, body: _body}} ->
+        IO.inspect(code)
         :ok
 
       {:error, %HTTPoison.Error{reason: reason}} ->

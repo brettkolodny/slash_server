@@ -1,5 +1,10 @@
 defmodule SlashServer.CommandGroup do
-  use Ash.Resource, data_layer: Ash.DataLayer.Ets
+  use Ash.Resource, data_layer: AshPostgres.DataLayer
+
+  postgres do
+    repo SlashServer.Repo
+    table "command_group"
+  end
 
   attributes do
     uuid_primary_key :id
@@ -8,7 +13,7 @@ defmodule SlashServer.CommandGroup do
       allow_nil?: false,
       constraints: [
         max_length: 100,
-        match: ~r/^([a-z])+-?([a-z])+$/i
+        match: ~r/^([a-z])+-?([a-z])+$/
       ]
 
     attribute :description, :string do

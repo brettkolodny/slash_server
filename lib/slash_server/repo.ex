@@ -1,5 +1,5 @@
 defmodule SlashServer.Repo do
-  use Ecto.Repo,
+  use AshPostgres.Repo,
     otp_app: :slash_server,
     adapter: Ecto.Adapters.Postgres
 end

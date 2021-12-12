@@ -1,5 +1,10 @@
 defmodule SlashServer.Command do
-  use Ash.Resource, data_layer: Ash.DataLayer.Ets
+  use Ash.Resource, data_layer: AshPostgres.DataLayer
+
+  postgres do
+    repo SlashServer.Repo
+    table "command"
+  end
 
   attributes do
     uuid_primary_key :command_id

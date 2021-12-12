@@ -2,7 +2,7 @@ defmodule SlashServerWeb.Plugs.Auth do
   import Plug.Conn
   alias SlashServerWeb.Router.Helpers, as: Routes
 
-  @session_timeout 60
+  @session_timeout 1800
 
   def init(default), do: default
 
@@ -21,8 +21,6 @@ defmodule SlashServerWeb.Plugs.Auth do
           |> Time.from_iso8601!()
           |> Time.diff(Time.utc_now())
           |> abs()
-
-        IO.inspect(diff)
 
         if diff > @session_timeout do
           conn

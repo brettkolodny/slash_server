@@ -1,0 +1,109 @@
+{
+  "attributes": [
+    {
+      "allow_nil?": false,
+      "default": "nil",
+      "generated?": false,
+      "name": "command_id",
+      "primary_key?": true,
+      "references": null,
+      "size": null,
+      "type": "uuid"
+    },
+    {
+      "allow_nil?": false,
+      "default": "nil",
+      "generated?": false,
+      "name": "name",
+      "primary_key?": false,
+      "references": null,
+      "size": null,
+      "type": "text"
+    },
+    {
+      "allow_nil?": false,
+      "default": "nil",
+      "generated?": false,
+      "name": "description",
+      "primary_key?": false,
+      "references": null,
+      "size": null,
+      "type": "text"
+    },
+    {
+      "allow_nil?": false,
+      "default": "nil",
+      "generated?": false,
+      "name": "response",
+      "primary_key?": false,
+      "references": null,
+      "size": null,
+      "type": "text"
+    },
+    {
+      "allow_nil?": false,
+      "default": "fragment(\"now()\")",
+      "generated?": false,
+      "name": "inserted_at",
+      "primary_key?": false,
+      "references": null,
+      "size": null,
+      "type": "utc_datetime_usec"
+    },
+    {
+      "allow_nil?": false,
+      "default": "fragment(\"now()\")",
+      "generated?": false,
+      "name": "updated_at",
+      "primary_key?": false,
+      "references": null,
+      "size": null,
+      "type": "utc_datetime_usec"
+    },
+    {
+      "allow_nil?": true,
+      "default": "nil",
+      "generated?": false,
+      "name": "command_group_id",
+      "primary_key?": false,
+      "references": {
+        "destination_field": "id",
+        "destination_field_default": null,
+        "destination_field_generated": null,
+        "multitenancy": {
+          "attribute": null,
+          "global": null,
+          "strategy": null
+        },
+        "name": "command_command_group_id_fkey",
+        "on_delete": null,
+        "on_update": null,
+        "table": "command_group"
+      },
+      "size": null,
+      "type": "uuid"
+    }
+  ],
+  "base_filter": null,
+  "check_constraints": [],
+  "custom_indexes": [],
+  "has_create_action": true,
+  "hash": "A2BB05233C9152047B5AE5536A07ED64CDE3B49A0202A2DE2A477A7FF4C6FE8A",
+  "identities": [
+    {
+      "base_filter": null,
+      "index_name": "command_unique_name_index",
+      "keys": [
+        "name"
+      ],
+      "name": "unique_name"
+    }
+  ],
+  "multitenancy": {
+    "attribute": null,
+    "global": null,
+    "strategy": null
+  },
+  "repo": "Elixir.SlashServer.Repo",
+  "table": "command"
+}

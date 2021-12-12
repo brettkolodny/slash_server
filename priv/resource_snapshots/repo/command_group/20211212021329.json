@@ -1,0 +1,76 @@
+{
+  "attributes": [
+    {
+      "allow_nil?": false,
+      "default": "nil",
+      "generated?": false,
+      "name": "id",
+      "primary_key?": true,
+      "references": null,
+      "size": null,
+      "type": "uuid"
+    },
+    {
+      "allow_nil?": false,
+      "default": "nil",
+      "generated?": false,
+      "name": "name",
+      "primary_key?": false,
+      "references": null,
+      "size": null,
+      "type": "text"
+    },
+    {
+      "allow_nil?": false,
+      "default": "nil",
+      "generated?": false,
+      "name": "description",
+      "primary_key?": false,
+      "references": null,
+      "size": null,
+      "type": "text"
+    },
+    {
+      "allow_nil?": false,
+      "default": "fragment(\"now()\")",
+      "generated?": false,
+      "name": "inserted_at",
+      "primary_key?": false,
+      "references": null,
+      "size": null,
+      "type": "utc_datetime_usec"
+    },
+    {
+      "allow_nil?": false,
+      "default": "fragment(\"now()\")",
+      "generated?": false,
+      "name": "updated_at",
+      "primary_key?": false,
+      "references": null,
+      "size": null,
+      "type": "utc_datetime_usec"
+    }
+  ],
+  "base_filter": null,
+  "check_constraints": [],
+  "custom_indexes": [],
+  "has_create_action": true,
+  "hash": "3E90735DA1E05B2A76A39718302F504269EF5B1E45FEFDA3BDDF22B58ECCE106",
+  "identities": [
+    {
+      "base_filter": null,
+      "index_name": "command_group_unique_name_index",
+      "keys": [
+        "name"
+      ],
+      "name": "unique_name"
+    }
+  ],
+  "multitenancy": {
+    "attribute": null,
+    "global": null,
+    "strategy": null
+  },
+  "repo": "Elixir.SlashServer.Repo",
+  "table": "command_group"
+}
