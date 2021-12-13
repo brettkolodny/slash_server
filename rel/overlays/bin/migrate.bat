@@ -1,0 +1,1 @@
+call "%~dp0\slash_server" eval SlashServer.Release.migrate

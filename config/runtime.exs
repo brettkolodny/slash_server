@@ -14,9 +14,13 @@ if config_env() == :prod do
       For example: ecto://USER:PASS@HOST/DATABASE
       """
 
+  app_name =
+    System.get_env("FLY_APP_NAME") ||
+      raise "FLY_APP_NAME not available"
+
   config :slash_server, SlashServer.Repo,
     # ssl: true,
-    # socket_options: [:inet6],
+    socket_options: [:inet6],
     url: database_url,
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
 
@@ -33,6 +37,8 @@ if config_env() == :prod do
       """
 
   config :slash_server, SlashServerWeb.Endpoint,
+    server: true,
+    url: [host: "#{app_name}.fly.dev", port: 80],
     http: [
       # Enable IPv6 and bind on all interfaces.
       # Set it to  {0, 0, 0, 0, 0, 0, 0, 1} for local network only access.
