@@ -1,8 +1,11 @@
 defmodule SlashServerWeb.SlashController do
   use SlashServerWeb, :controller
 
-  @public_key "44ea0b11f60503fe9fffe01d745f0b10ad8432b63de39b3ef1ee48a736a93af3"
   @embed_color 0xFF4C3B
+
+  defp get_public_key() do
+    Application.get_env(:slash_server, :app_public_key)
+  end
 
   defp construct_response(name, desc, resp) do
     embed = %{
@@ -35,7 +38,7 @@ defmodule SlashServerWeb.SlashController do
       |> List.first()
       |> Kernel.<>(body)
 
-    public_key = @public_key |> Base.decode16!(case: :lower)
+    public_key = get_public_key() |> Base.decode16!(case: :lower)
 
     if Kcl.valid_signature?(x_sig, msg, public_key) do
       true

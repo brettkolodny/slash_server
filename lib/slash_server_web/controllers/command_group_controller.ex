@@ -67,18 +67,12 @@ defmodule SlashServerWeb.CommandGroupController do
   def delete(conn, %{"name" => name}) do
     case SlashServer.Api.get(SlashServer.CommandGroup, name: name) do
       {:ok, res} ->
-        case SlashServer.Discord.delete_command(name) do
-          :ok ->
-            Ash.Changeset.for_destroy(res, :destroy)
-            |> SlashServer.Api.destroy()
+        SlashServer.Discord.delete_command(name)
 
-            redirect(conn, to: Routes.command_group_path(conn, :show))
+        Ash.Changeset.for_destroy(res, :destroy)
+        |> SlashServer.Api.destroy()
 
-          :error ->
-            conn
-            |> put_flash(:error, "Could not delete command")
-            |> redirect(to: Routes.command_group_path(conn, :show))
-        end
+        redirect(conn, to: Routes.command_group_path(conn, :show))
 
       _ ->
         conn

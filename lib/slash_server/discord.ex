@@ -1,10 +1,13 @@
 defmodule SlashServer.Discord do
-  @endpoint "https://discord.com/api/v9/applications/#{Application.get_env(:slash_server, :app_id)}/guilds/#{Application.get_env(:slash_server, :guild_id)}/commands"
+
+  defp get_endpoint() do
+    "https://discord.com/api/v9/applications/#{Application.get_env(:slash_server, :app_id)}/guilds/#{Application.get_env(:slash_server, :guild_id)}/commands"
+  end
 
   defp get_all_commands() do
     headers = [Authorization: "Bot #{Application.get_env(:slash_server, :app_secret)}"]
 
-    case HTTPoison.get(@endpoint, headers) do
+    case HTTPoison.get(get_endpoint(), headers) do
       {:ok, %HTTPoison.Response{body: body}} ->
         case Jason.decode(body) do
           {:ok, commands} ->
@@ -45,7 +48,9 @@ defmodule SlashServer.Discord do
 
     body = Jason.encode!(%{name: name, description: desc, options: command_options})
 
-    case HTTPoison.post(@endpoint, body, headers) do
+    IO.inspect(get_endpoint())
+
+    case HTTPoison.post(get_endpoint(), body, headers) do
       {:ok, %HTTPoison.Response{status_code: code, body: _body}} ->
         IO.inspect(code)
         :ok
@@ -75,7 +80,7 @@ defmodule SlashServer.Discord do
     headers = [Authorization: "Bot #{Application.get_env(:slash_server, :app_secret)}"]
 
     case HTTPoison.delete(
-           "#{@endpoint}/#{id}",
+           "#{get_endpoint()}/#{id}",
            headers
          ) do
       {:ok, _} ->

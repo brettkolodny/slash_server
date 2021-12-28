@@ -13,14 +13,6 @@ config :slash_server, SlashServerWeb.Endpoint,
   url: [host: "localhost", port: 4000],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
-config :slash_server, SlashServer.Discord,
-  app_id: System.get_env("APP_ID"),
-  app_secret: System.get_env("APP_SECRET"),
-  guild_id: System.get_env("GUID_ID")
-
-config :slash_server,
-  app_password: System.get_env("PASSWORD", "admin")
-
 # Do not print debug messages in production
 config :logger, level: :info
 

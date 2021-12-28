@@ -76,4 +76,11 @@ if config_env() == :prod do
   #     config :swoosh, :api_client, Swoosh.ApiClient.Hackney
   #
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
+
+  config :slash_server,
+    app_id: System.get_env("APP_ID"),
+    app_secret: System.get_env("APP_SECRET"),
+    guild_id: System.get_env("GUILD_ID"),
+    app_password: System.get_env("PASSWORD", "admin"),
+    app_public_key: System.get_env("PUBLIC_KEY")
 end
